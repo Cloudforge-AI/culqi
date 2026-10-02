@@ -47,7 +47,10 @@ export class CulqiAuthenticationError extends CulqiError {}
 /** Malformed request: bad parameter, missing field, invalid id. */
 export class CulqiInvalidRequestError extends CulqiError {}
 
-/** The card was declined or failed processing. */
+/**
+ * The card was declined or failed processing. Check `declineCode`
+ * (`stolen_card`, `insufficient_funds`, …) to tell the shopper what happened.
+ */
 export class CulqiCardError extends CulqiError {}
 
 /** Rate limiting on the Culqi API. */
@@ -77,13 +80,18 @@ export function culqiErrorFromResponse(
     case "invalid_request_error":
     case "parameter_error":
       return new CulqiInvalidRequestError(status, body);
+    // A decline arrives as "card_error" or, for charges, as "operacion_denegada"
+    // (verified: HTTP 400, code DNGE0031, decline_code "stolen_card").
     case "card_error":
+    case "operacion_denegada":
       return new CulqiCardError(status, body);
     case "limit_api_error":
       return new CulqiRateLimitError(status, body);
     case "api_error":
       return new CulqiApiError(status, body);
   }
+  // Any body carrying a decline_code is a decline, whatever Culqi named the type.
+  if (body.decline_code) return new CulqiCardError(status, body);
   if (status === 401 || status === 403) {
     return new CulqiAuthenticationError(status, body);
   }

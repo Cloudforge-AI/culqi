@@ -97,6 +97,14 @@ const charge = await culqi.charges.create({
 // Declines throw CulqiCardError (check .declineCode).
 ```
 
+A decline does **not** arrive as `type: "card_error"`, whatever you would expect. The real
+shape, verified against the integration environment with card `4000 0200 0000 0000`:
+
+```json
+{ "object": "error", "type": "operacion_denegada", "code": "DNGE0031",
+  "decline_code": "stolen_card", "merchant_message": "Tarjeta robada." }   // HTTP 400
+```
+
 For card/Yape charges you do NOT need a webhook to know the payment happened —
 the synchronous response is authoritative. Webhooks are the safety net for
 "my server crashed between charging and persisting".
@@ -314,6 +322,10 @@ if the merchant has RSA keys configured in the panel.
   `tokenId` is a double charge. Culqi documents no idempotency-key header;
   dedupe server-side by your own order/booking id before calling
   `charges.create`, and disable the pay button after the first click.
+- **Declines are `operacion_denegada`, not `card_error`.** The SDK maps both (and anything
+  carrying a `decline_code`) to `CulqiCardError` from 0.2.2 on; on 0.2.1 and earlier a decline
+  reaches you as a generic `CulqiError`, so `err instanceof CulqiCardError` silently misses it
+  and the shopper sees "something went wrong" instead of "your card was declined".
 - **Test and live are separate universes.** An `ord_test_...` fetched with an `sk_live_` key
   answers *"No existe el siguiente order_id"*. That error usually means mixed environments, not
   a missing resource.

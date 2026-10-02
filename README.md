@@ -148,6 +148,7 @@ try {
   await culqi.charges.create(params);
 } catch (err) {
   if (err instanceof CulqiCardError) show(err.userMessage); // declined; see err.declineCode
+  // Culqi sends declines as type "operacion_denegada" (not "card_error"); the SDK maps both.
   else if (err instanceof CulqiAuthenticationError) alertOps("check API keys");
   else if (err instanceof CulqiError) log(err.status, err.type, err.merchantMessage);
 }

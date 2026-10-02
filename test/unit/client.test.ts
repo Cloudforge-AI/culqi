@@ -4,6 +4,8 @@ import {
   CulqiAuthenticationError,
   CulqiCardError,
   CulqiConnectionError,
+  CulqiError,
+  culqiErrorFromResponse,
   CulqiInvalidRequestError,
 } from "../../src/index.js";
 import type { FetchLike } from "../../src/index.js";
@@ -161,5 +163,40 @@ describe("Culqi client", () => {
       "https://api.culqi.com/v2/recurrent/plans/create",
       expect.anything()
     );
+  });
+});
+
+describe("decline mapping", () => {
+  it("maps operacion_denegada to CulqiCardError (the shape a real decline has)", () => {
+    const err = culqiErrorFromResponse(400, {
+      object: "error",
+      type: "operacion_denegada",
+      code: "DNGE0031",
+      decline_code: "stolen_card",
+      merchant_message: "Tarjeta robada.",
+      user_message: "Tu tarjeta fue rechazada.",
+    });
+    expect(err).toBeInstanceOf(CulqiCardError);
+    expect(err.declineCode).toBe("stolen_card");
+  });
+
+  it("still maps card_error to CulqiCardError", () => {
+    const err = culqiErrorFromResponse(400, { object: "error", type: "card_error" });
+    expect(err).toBeInstanceOf(CulqiCardError);
+  });
+
+  it("treats any unknown type carrying decline_code as a decline", () => {
+    const err = culqiErrorFromResponse(400, {
+      object: "error",
+      type: "un_tipo_nuevo",
+      decline_code: "insufficient_funds",
+    });
+    expect(err).toBeInstanceOf(CulqiCardError);
+  });
+
+  it("leaves a plain 400 without decline_code as a generic CulqiError", () => {
+    const err = culqiErrorFromResponse(400, { object: "error", type: "algo_raro" });
+    expect(err).toBeInstanceOf(CulqiError);
+    expect(err).not.toBeInstanceOf(CulqiCardError);
   });
 });
