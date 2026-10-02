@@ -1,6 +1,6 @@
 {
   "name": "@jibaru/culqi",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Type-safe, zero-dependency TypeScript SDK for the Culqi payments API (Peru): charges, pre-authorizations, refunds, customers, cards, orders, plans, subscriptions, webhooks and browser checkout.",
   "keywords": [
     "culqi",
