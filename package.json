@@ -1,5 +1,5 @@
 {
-  "name": "@jibaru/culqi",
+  "name": "@cloudforge-ai/culqi",
   "version": "0.2.2",
   "description": "Type-safe, zero-dependency TypeScript SDK for the Culqi payments API (Peru): charges, pre-authorizations, refunds, customers, cards, orders, plans, subscriptions, webhooks and browser checkout.",
   "keywords": [
@@ -15,10 +15,10 @@
   "author": "Jibaru",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jibaru/culqi.git"
+    "url": "git+https://github.com/Cloudforge-AI/culqi.git"
   },
-  "homepage": "https://github.com/Jibaru/culqi#readme",
-  "bugs": "https://github.com/Jibaru/culqi/issues",
+  "homepage": "https://github.com/Cloudforge-AI/culqi#readme",
+  "bugs": "https://github.com/Cloudforge-AI/culqi/issues",
   "type": "module",
   "engines": {
     "node": ">=18"
@@ -27,6 +27,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

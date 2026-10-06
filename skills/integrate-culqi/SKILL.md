@@ -1,6 +1,6 @@
 ---
 name: integrate-culqi
-description: Integrate Culqi (Peruvian payment gateway) into a TypeScript/JavaScript project quickly and correctly, using the @jibaru/culqi SDK. Covers checkout tokenization, immediate charges, pre-authorization + capture, refunds, card-on-file, async orders, subscriptions, and webhooks. Use when the user wants to accept payments with Culqi, add card/Yape payments in Peru, or debug a Culqi integration.
+description: Integrate Culqi (Peruvian payment gateway) into a TypeScript/JavaScript project quickly and correctly, using the @cloudforge-ai/culqi SDK. Covers checkout tokenization, immediate charges, pre-authorization + capture, refunds, card-on-file, async orders, subscriptions, and webhooks. Use when the user wants to accept payments with Culqi, add card/Yape payments in Peru, or debug a Culqi integration.
 ---
 
 # Integrate Culqi in TypeScript
@@ -20,7 +20,7 @@ Official sources — always verify current behavior against these:
 ## Setup
 
 ```bash
-npm install @jibaru/culqi
+npm install @cloudforge-ai/culqi
 ```
 
 Keys live in CulqiPanel → Desarrollo → API Keys. Two pairs: `*_test_*`
@@ -58,7 +58,7 @@ Server ── token + sk ──> Culqi API ──> charge / saved card / ...
 ### 1. Browser: tokenize with Culqi Checkout
 
 ```ts
-import { loadCheckoutScript, openCheckout } from "@jibaru/culqi/checkout";
+import { loadCheckoutScript, openCheckout } from "@cloudforge-ai/culqi/checkout";
 
 await loadCheckoutScript();
 openCheckout({
@@ -83,7 +83,7 @@ at the browser default 150px and looks cut off. Force it to fill:
 ### 2. Server: charge (the response IS the payment state)
 
 ```ts
-import { Culqi, CulqiCardError } from "@jibaru/culqi";
+import { Culqi, CulqiCardError } from "@cloudforge-ai/culqi";
 
 const culqi = new Culqi({ secretKey: process.env.CULQI_SECRET_KEY! });
 
@@ -235,7 +235,7 @@ as HTTP Basic auth. The username field is capped at **20 characters**, so an ema
 use something like `culqi-hook`.
 
 ```ts
-import { parseWebhookEvent, verifyWebhookBasicAuth } from "@jibaru/culqi";
+import { parseWebhookEvent, verifyWebhookBasicAuth } from "@cloudforge-ai/culqi";
 
 export async function handler(req: Request) {
   if (!verifyWebhookBasicAuth(req, {

@@ -12,7 +12,7 @@ export interface CreateTokenParams {
 
 /**
  * Card tokenization. Tokens are created against `secure.culqi.com` with the
- * PUBLIC key; in browsers prefer Culqi Checkout (see `@jibaru/culqi/checkout`)
+ * PUBLIC key; in browsers prefer Culqi Checkout (see `@cloudforge-ai/culqi/checkout`)
  * so card data never touches your servers. Server-side creation is meant for
  * testing and PCI-compliant backends only.
  * @see https://apidocs.culqi.com/ (Tokens)

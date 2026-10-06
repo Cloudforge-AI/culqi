@@ -1,4 +1,6 @@
-# @jibaru/culqi
+# @cloudforge-ai/culqi
+
+> Previously published as `@jibaru/culqi`. New versions are published here, under `@cloudforge-ai/culqi`.
 
 Type-safe, zero-dependency TypeScript SDK for the [Culqi](https://culqi.com/) payments API (Peru).
 
@@ -9,12 +11,12 @@ Type-safe, zero-dependency TypeScript SDK for the [Culqi](https://culqi.com/) pa
 - **Complete**: tokens, charges (incl. pre-authorization + capture), refunds, customers, saved cards, orders, recurrent plans & subscriptions, webhooks, browser checkout, optional AES/RSA payload encryption.
 - **Zero runtime dependencies**, native `fetch`, Node ≥ 18.
 - **Dual ESM/CJS**, full TypeScript types, typed error classes.
-- **Two entries**: `@jibaru/culqi` (server, secret key) and `@jibaru/culqi/checkout` (browser, public key) — server code never reaches your bundle.
+- **Two entries**: `@cloudforge-ai/culqi` (server, secret key) and `@cloudforge-ai/culqi/checkout` (browser, public key) — server code never reaches your bundle.
 
 ## Install
 
 ```bash
-npm install @jibaru/culqi
+npm install @cloudforge-ai/culqi
 ```
 
 ## Quickstart
@@ -22,7 +24,7 @@ npm install @jibaru/culqi
 **Browser** — tokenize with Culqi Checkout (card data never touches your server):
 
 ```ts
-import { loadCheckoutScript, openCheckout } from "@jibaru/culqi/checkout";
+import { loadCheckoutScript, openCheckout } from "@cloudforge-ai/culqi/checkout";
 
 await loadCheckoutScript();
 openCheckout({
@@ -39,7 +41,7 @@ openCheckout({
 **Server** — charge the token:
 
 ```ts
-import { Culqi } from "@jibaru/culqi";
+import { Culqi } from "@cloudforge-ai/culqi";
 
 const culqi = new Culqi({ secretKey: process.env.CULQI_SECRET_KEY });
 
@@ -113,7 +115,7 @@ check them with `verifyWebhookBasicAuth`, which compares in constant time. Then 
 resource before trusting the payload:
 
 ```ts
-import { parseWebhookEvent, verifyWebhookBasicAuth } from "@jibaru/culqi";
+import { parseWebhookEvent, verifyWebhookBasicAuth } from "@cloudforge-ai/culqi";
 
 if (!verifyWebhookBasicAuth(req, { username, password })) return new Response(null, { status: 401 });
 
@@ -142,7 +144,7 @@ Uses WebCrypto — works in Node ≥ 18 and edge runtimes, still zero dependenci
 ## Error handling
 
 ```ts
-import { CulqiCardError, CulqiAuthenticationError, CulqiError } from "@jibaru/culqi";
+import { CulqiCardError, CulqiAuthenticationError, CulqiError } from "@cloudforge-ai/culqi";
 
 try {
   await culqi.charges.create(params);
@@ -156,10 +158,10 @@ try {
 
 ## Agent skill
 
-This repo ships an [Agent Skill](https://github.com/Jibaru/culqi/tree/main/skills/integrate-culqi) that teaches coding agents (Claude Code, Cursor, etc.) to integrate Culqi correctly — flows, pitfalls, and test cards included:
+This repo ships an [Agent Skill](https://github.com/Cloudforge-AI/culqi/tree/main/skills/integrate-culqi) that teaches coding agents (Claude Code, Cursor, etc.) to integrate Culqi correctly — flows, pitfalls, and test cards included:
 
 ```bash
-npx skills add Jibaru/culqi --skill=integrate-culqi
+npx skills add Cloudforge-AI/culqi --skill=integrate-culqi
 ```
 
 ## Development
