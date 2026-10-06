@@ -1,0 +1,41 @@
+name: Publish
+
+# Publishes to npm through trusted publishing (OIDC): no npm token exists anywhere, and npm
+# attaches provenance on its own. A `v*` tag starts the run; the `npm-publish` environment
+# then holds it until the owner approves, and npm only accepts publishes from this workflow
+# running in that environment.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Trusted publishing needs npm >= 11.5.1 and Node >= 22.14.0. `24` resolves to the
+          # latest 24.x, whose bundled npm is past that (24.15.0 ships npm 11.12.1).
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Tag matches package.json version
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm run lint
+      # prepublishOnly runs typecheck, unit tests and build before the upload.
+      - run: npm publish
