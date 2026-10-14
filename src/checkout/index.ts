@@ -73,6 +73,13 @@ export interface OpenCheckoutOptions {
   /** Integer amount in cents. */
   amount: number;
   currency: string;
+  /**
+   * Checkout UI language. Culqi accepts `"auto" | "es" | "en"`
+   * (docs.culqi.com/es/documentacion/checkout/checkout-custom); `"auto"` follows the
+   * BROWSER language — a Peru-only product usually wants a fixed `"es"`, or an
+   * English-browser buyer sees the modal in English. Defaults to `"auto"` (unchanged).
+   */
+  lang?: "auto" | "es" | "en";
   email?: string;
   /** `modal` opens a popup; `embedded` renders inside `containerId`. */
   mode?: "modal" | "embedded";
@@ -122,7 +129,7 @@ export function openCheckout(options: OpenCheckoutOptions): CulqiCheckoutInstanc
     },
     client: { email: options.email },
     options: {
-      lang: "auto",
+      lang: options.lang ?? "auto",
       installments: options.installments ?? false,
       modal: mode === "modal",
       ...(mode === "embedded" && { container: `#${options.containerId}` }),
