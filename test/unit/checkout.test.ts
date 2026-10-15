@@ -74,6 +74,19 @@ describe("openCheckout config", () => {
     expect(lastSettings()).not.toHaveProperty("order");
   });
 
+  it("lang defaults to auto and passes through when set", () => {
+    const { calls } = stubCheckout();
+    const lastOptions = () => {
+      const call = calls.at(-1);
+      if (!call) throw new Error("openCheckout was never called");
+      return call.config.options as Record<string, unknown>;
+    };
+    openCheckout(base);
+    expect(lastOptions().lang).toBe("auto");
+    openCheckout({ ...base, lang: "es" });
+    expect(lastOptions().lang).toBe("es");
+  });
+
   it("routes an order to onOrder and a token to onToken", () => {
     const { instance } = stubCheckout();
     const onToken = vi.fn();
